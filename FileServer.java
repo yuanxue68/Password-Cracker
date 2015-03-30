@@ -47,6 +47,7 @@ public class FileServer {
 	        t.checkpath();
 	        
 	        ServerSocket serverSocket = new ServerSocket(port);
+	        System.out.println("password size is : "+password.size());  
             while (true) {
                 Socket socket = serverSocket.accept();
                 new FileServerThread(socket).start();
@@ -83,7 +84,7 @@ public class FileServer {
                         null,           // Data not needed.
                         CreateMode.EPHEMERAL   // Znode type, set to EPHEMERAL.
                         );
-            if (ret == Code.OK) System.out.println("the boss!");
+            if (ret == Code.OK) System.out.println("the boss fileserver now");
         } 
     }
 
@@ -110,6 +111,7 @@ class FileServerThread extends Thread {
 	ObjectOutputStream out=null;
 	
 	FileServerThread(Socket _socket){
+		super();
 		try{
 			this.socket=_socket;
 			this.in=new ObjectInputStream (this.socket.getInputStream());
@@ -124,6 +126,7 @@ class FileServerThread extends Thread {
 	public void run(){
 		try {
 			workPacket packet=(workPacket)in.readObject();
+			System.out.println("getting some of dem packet hmmm hmmm");  
 			if(packet.type==workPacket.dictRequest){
 				
 				workPacket replyPacket=new workPacket();

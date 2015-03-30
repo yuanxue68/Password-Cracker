@@ -20,7 +20,7 @@ public class JobTracker {
 	 String workDone="/workDone";
 	 String passSolved="/passSolved";
 	 
-	 ZkConnector zkc;
+	 public ZkConnector zkc;
 	 Watcher watcher;
 	 static String host;
 	 static int port;
@@ -59,7 +59,7 @@ public class JobTracker {
 		        ServerSocket serverSocket = new ServerSocket(port);
 	            while (true) {
 	                Socket socket = serverSocket.accept();
-	                new JobTrackerThread(socket).start();
+	                new JobTrackerThread(host,socket).start();
 	            }
 	        }
 	        catch(Exception e){
@@ -77,7 +77,7 @@ public class JobTracker {
                         null,           // Data not needed.
                         CreateMode.EPHEMERAL   // Znode type, set to EPHEMERAL.
                         );
-            if (ret == Code.OK) System.out.println("created jobs path for jobtracker");
+            if (ret == Code.OK) System.out.println("the boss jobtracker");
         } 
         
         Stat workingStat = zkc.exists(workingPath, watcher);

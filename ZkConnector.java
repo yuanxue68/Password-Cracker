@@ -10,6 +10,7 @@ import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Stat;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 
@@ -89,6 +90,46 @@ public class ZkConnector implements Watcher {
         if (event.getState() == KeeperState.SyncConnected) {
             connectedSignal.countDown();
         }
+    }
+    
+    public void deleterNode(String path){
+    	try {
+			zooKeeper.delete(path, -1);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeeperException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    public ArrayList<String> getChilds(String path,Watcher watcher){
+    	ArrayList<String> childNodes=new ArrayList<String>();
+    	try {
+			childNodes=(ArrayList<String>) zooKeeper.getChildren(path, watcher);
+		} catch (KeeperException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return childNodes;
+    }
+    
+    public byte[] getData(String path,Stat stat){
+    	byte[] data=null;
+    	try {
+			data = zooKeeper.getData(path, true, stat);
+		} catch (KeeperException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return data;
     }
 }
 
