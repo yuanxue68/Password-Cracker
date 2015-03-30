@@ -11,6 +11,8 @@ import org.apache.zookeeper.Watcher.Event.EventType;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -28,7 +30,7 @@ public class FileServer {
     public static void main(String[] args) {
       
         if (args.length != 2) {
-            System.out.println("Usage: java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. Test zkServer:clientPort");
+            System.out.println("Usage: java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. FileServer zkServer:clientPort");
             return;
         }
 
@@ -95,7 +97,7 @@ public class FileServer {
             }
             if (type == EventType.NodeCreated) {
                 System.out.println(myPath + " created!");       
-                try{ Thread.sleep(5000); } catch (Exception e) {}
+                //try{ Thread.sleep(5000); } catch (Exception e) {}
                 checkpath(); // re-enable the watch
             }
         }
@@ -103,8 +105,56 @@ public class FileServer {
 
 }
 class FileServerThread extends Thread {
-	FileServerThread(Socket socket){
+	Socket socket=null;
+	ObjectInputStream in =null;
+	ObjectOutputStream out=null;
+	
+	FileServerThread(Socket _socket){
+		try{
+			this.socket=_socket;
+			this.in=new ObjectInputStream (this.socket.getInputStream());
+			this.out=new ObjectOutputStream (this.socket.getOutputStream());
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 		
+	}
+	
+	public void run(){
+		try {
+			workPacket packet=(workPacket)in.readObject();
+			if(packet.type==workPacket.dictRequest){
+				
+				workPacket replyPacket=new workPacket();
+				
+				int firstIndex=packet.index*1000;
+				int lastIndex;
+				if(firstIndex+1000<FileServer.password.size())
+					lastIndex=firstIndex+1000;
+				else
+					lastIndex=FileServer.password.size()-1;
+					
+				for(int i=firstIndex;i<=lastIndex;i++){
+					replyPacket.words.add(FileServer.password.get(i));
+				}
+				
+				replyPacket.type=workPacket.dictReply;
+				out.writeObject(replyPacket);
+			}
+			in.close();
+            out.close();
+            socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			
+			
+		}
 	}
 	
 }
