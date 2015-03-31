@@ -22,6 +22,7 @@ public class JobTracker {
 	 
 	 public ZkConnector zkc;
 	 Watcher watcher;
+	 static String zkhost;
 	 static String host;
 	 static int port;
 	 
@@ -29,8 +30,9 @@ public class JobTracker {
 		 zkc = new ZkConnector();
 	        try {
 	            zkc.connect(hosts);
+	            System.out.println("JobTracker: zk connect in job tracker parent on host "+hosts);
 	        } catch(Exception e) {
-	            System.out.println("Zookeeper connect "+ e.getMessage());
+	            System.out.println("JobTracker: Zookeeper connect "+ e.getMessage());
 	        }
 	 
 	        watcher = new Watcher() { // Anonymous Watcher
@@ -49,6 +51,7 @@ public class JobTracker {
 	        }
 
 	        try{
+	        	zkhost=args[0];
 	        	host=InetAddress.getLocalHost().getHostName();
 	        	port=Integer.parseInt(args[1]);
 		        
@@ -59,7 +62,8 @@ public class JobTracker {
 		        ServerSocket serverSocket = new ServerSocket(port);
 	            while (true) {
 	                Socket socket = serverSocket.accept();
-	                new JobTrackerThread(host,socket).start();
+	                System.out.println("got a request on port "+socket.getPort());
+	                new JobTrackerThread(zkhost,socket).start();
 	            }
 	        }
 	        catch(Exception e){
@@ -75,42 +79,42 @@ public class JobTracker {
             Code ret = zkc.create(
                         myPath,         // Path of znode
                         host+"_"+port,           // Data not needed.
-                        CreateMode.EPHEMERAL   // Znode type, set to EPHEMERAL.
+                        CreateMode.PERSISTENT   // Znode type, set to EPHEMERAL.
                         );
-            if (ret == Code.OK) System.out.println("the boss jobtracker");
+            if (ret == Code.OK) System.out.println("JobTracker: the boss jobtracker");
         } 
         
         Stat workingStat = zkc.exists(workingPath, watcher);
         if (workingStat == null) {              // znode doesn't exist; let's try creating it
-            System.out.println("Creating " + workingPath);
+            System.out.println("JobTracker: Creating " + workingPath);
             Code ret = zkc.create(
             			workingPath,         // Path of znode
             			host+"_"+port,           // Data not needed.
                         CreateMode.PERSISTENT   // Znode type, set to EPHEMERAL.
                         );
-            if (ret == Code.OK) System.out.println("created working path");
+            if (ret == Code.OK) System.out.println("JobTracker: created working path");
         } 
         
         Stat workDoneStat = zkc.exists(workDone, watcher);
         if (workDoneStat == null) {              // znode doesn't exist; let's try creating it
-            System.out.println("Creating " + workDone);
+            System.out.println("JobTracker: Creating " + workDone);
             Code ret = zkc.create(
                         workDone,         // Path of znode
                         host+"_"+port,           // Data not needed.
                         CreateMode.PERSISTENT   // Znode type, set to EPHEMERAL.
                         );
-            if (ret == Code.OK) System.out.println("created workDone path");
+            if (ret == Code.OK) System.out.println("JobTracker: created workDone path");
         } 
         
         Stat solvedStat = zkc.exists(passSolved, watcher);
         if (solvedStat == null) {              // znode doesn't exist; let's try creating it
-            System.out.println("Creating " + passSolved);
+            System.out.println("JobTracker: Creating " + passSolved);
             Code ret = zkc.create(
                         passSolved,         // Path of znode
                         host+"_"+port,           // Data not needed.
                         CreateMode.PERSISTENT   // Znode type, set to EPHEMERAL.
                         );
-            if (ret == Code.OK) System.out.println("created passSolved path");
+            if (ret == Code.OK) System.out.println("JobTracker: created passSolved path");
         } 
     }
 
@@ -119,11 +123,11 @@ public class JobTracker {
         EventType type = event.getType();
         if(path.equalsIgnoreCase(myPath)) {
             if (type == EventType.NodeDeleted) {
-                System.out.println(myPath + " deleted! Let's go!");       
+                System.out.println("JobTracker:" +myPath + " deleted! Let's go!");       
                 checkpath(); // try to become the boss
             }
             if (type == EventType.NodeCreated) {
-                System.out.println(myPath + " created!");       
+                System.out.println("JobTracker: "+myPath + " created!");       
                 try{ Thread.sleep(5000); } catch (Exception e) {}
                 checkpath(); // re-enable the watch
             }

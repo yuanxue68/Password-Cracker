@@ -55,8 +55,8 @@ public class Client {
         System.out.println("request <password> to create new task");
         System.out.println("query <password> to query the status of created tasks");
         while (true){
-        	workPacket output=new workPacket();
-		   	workPacket reply=new workPacket();
+        		workPacket output=new workPacket();
+        		workPacket reply=new workPacket();
         	   try{
         		   
         		   	String input; 		   	  		   		
@@ -64,14 +64,20 @@ public class Client {
 	               	//System.out.println("data length is "+stat.getDataLength());
 	               	byte[] nodeInfo=zkc.getData(myPath, stat);
 	               	String conInfo=new String(nodeInfo);
-	               	System.out.println("con info is "+conInfo);
+	               
 	               	String[] host_Port=conInfo.split("_");
+	            	//System.out.println("host is "+host_Port[0]);
+	            	//System.out.println("port is "+host_Port[1]);
 	               	socket=new Socket(host_Port[0],Integer.parseInt(host_Port[1]));
-	               	in=new ObjectInputStream(socket.getInputStream());
+	               	//System.out.println("socket created ");
 	               	out=new ObjectOutputStream(socket.getOutputStream());
+	               	in=new ObjectInputStream(socket.getInputStream());
 	               	
-	               	if (reconnect=true)
+	               	//System.out.println("stream created and reconnect is "+reconnect);
+	               	
+	               	if (reconnect==true)
       		   		{
+	               		System.out.println("reconnecting");
       		   			out.writeObject(output);
 	      		   		reply=(workPacket) in.readObject();
 	               		
@@ -92,7 +98,12 @@ public class Client {
 		               		}else if(inputSplit[0].toLowerCase().equals("query")){
 		               			output.type=workPacket.jobQuery;
 		               			output.hashedPassword=inputSplit[1];
+		               		}else{
+		               			System.out.println("request <password> to create new task");
+		               	        System.out.println("query <password> to query the status of created tasks");
+		               	        continue;
 		               		}
+		               		
 		               		out.writeObject(output);
 		               		reply=(workPacket) in.readObject();
 		               		
