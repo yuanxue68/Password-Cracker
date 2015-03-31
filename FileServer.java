@@ -81,7 +81,7 @@ public class FileServer {
             System.out.println("Creating " + myPath);
             Code ret = zkc.create(
                         myPath,         // Path of znode
-                        null,           // Data not needed.
+                        host+"_"+port,           // Data not needed.
                         CreateMode.EPHEMERAL   // Znode type, set to EPHEMERAL.
                         );
             if (ret == Code.OK) System.out.println("the boss fileserver now");

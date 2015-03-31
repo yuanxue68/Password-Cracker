@@ -76,7 +76,59 @@ public class JobTrackerThread extends Thread{
 	
 	
 	private void createJob(String hash) {
-		// TODO Auto-generated method stub
+		//first check if /job path exits
+		Stat stat = zkc.exists(myPath, watcher);
+        if (stat == null) {              // znode doesn't exist; let's try creating it
+            System.out.println("Creating " + myPath);
+            Code ret = zkc.create(
+                        myPath,         // Path of znode
+                        null,           // Data not needed.
+                        CreateMode.PERSISTENT   // Znode type, set to EPHEMERAL.
+                        );
+            if (ret == Code.OK) System.out.println(myPath+"created");
+        } 
+        //create a node to track finished segments of the hash
+        Stat stat2 = zkc.exists("/done/"+hash, watcher);
+        if (stat2 == null) {              // znode doesn't exist; let's try creating it
+            System.out.println("Creating " + "/done/"+hash);
+            Code ret = zkc.create(
+                        myPath,         // Path of znode
+                        null,           // Data not needed.
+                        CreateMode.PERSISTENT   // Znode type, set to EPHEMERAL.
+                        );
+            if (ret == Code.OK) System.out.println("/done/"+hash+"created");
+        } 
+        
+        Stat stat3=zkc.exists(myPath+"/"+hash, watcher);
+        if(stat3==null){
+        	System.out.println("Creating " + myPath+"/"+hash);
+            Code ret = zkc.create(
+            			myPath+"/"+hash,         // Path of znode
+                        null,           // Data not needed.
+                        CreateMode.PERSISTENT   // Znode type, set to EPHEMERAL.
+                        );
+            if (ret == Code.OK) System.out.println(myPath+"/"+hash);
+        	
+        }
+        
+        Stat stat4=null;
+        for(int i=0;i<266;i++){
+        	//create path such as : jobs/hash_230
+        	String path=myPath+"/"+hash+"_"+i;
+        	stat4 = zkc.exists(path, watcher);
+        	if(stat4==null){
+	        	Code ret = zkc.create(
+	                    path,         // Path of znode
+	                    null,           // Data not needed.
+	                    CreateMode.PERSISTENT   // Znode type, set to EPHEMERAL.
+	                    );
+	        	if (ret == Code.OK) System.out.println(path+"created");
+        	}
+        	stat4=null;
+        	
+        }
+        
+		
 		
 	}
 

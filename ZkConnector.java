@@ -122,6 +122,7 @@ public class ZkConnector implements Watcher {
     	byte[] data=null;
     	try {
 			data = zooKeeper.getData(path, true, stat);
+			System.out.println("data is "+data);
 		} catch (KeeperException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

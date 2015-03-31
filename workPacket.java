@@ -15,6 +15,7 @@ public class workPacket implements Serializable {
 	
 	public static final int jobExist=1000;
 	
+	public String ReplyMsg;
 	public String hashedPassword;
 	public int type=0;
 	public int index=0;

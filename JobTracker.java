@@ -74,7 +74,7 @@ public class JobTracker {
             System.out.println("Creating " + myPath);
             Code ret = zkc.create(
                         myPath,         // Path of znode
-                        null,           // Data not needed.
+                        host+"_"+port,           // Data not needed.
                         CreateMode.EPHEMERAL   // Znode type, set to EPHEMERAL.
                         );
             if (ret == Code.OK) System.out.println("the boss jobtracker");
@@ -85,7 +85,7 @@ public class JobTracker {
             System.out.println("Creating " + workingPath);
             Code ret = zkc.create(
             			workingPath,         // Path of znode
-                        null,           // Data not needed.
+            			host+"_"+port,           // Data not needed.
                         CreateMode.PERSISTENT   // Znode type, set to EPHEMERAL.
                         );
             if (ret == Code.OK) System.out.println("created working path");
@@ -96,7 +96,7 @@ public class JobTracker {
             System.out.println("Creating " + workDone);
             Code ret = zkc.create(
                         workDone,         // Path of znode
-                        null,           // Data not needed.
+                        host+"_"+port,           // Data not needed.
                         CreateMode.PERSISTENT   // Znode type, set to EPHEMERAL.
                         );
             if (ret == Code.OK) System.out.println("created workDone path");
@@ -107,7 +107,7 @@ public class JobTracker {
             System.out.println("Creating " + passSolved);
             Code ret = zkc.create(
                         passSolved,         // Path of znode
-                        null,           // Data not needed.
+                        host+"_"+port,           // Data not needed.
                         CreateMode.PERSISTENT   // Znode type, set to EPHEMERAL.
                         );
             if (ret == Code.OK) System.out.println("created passSolved path");
