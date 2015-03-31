@@ -1,6 +1,8 @@
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.KeeperException.Code;
@@ -52,22 +54,64 @@ public class JobTrackerThread extends Thread{
 			//System.out.println("getting some of dem jobtrackerthead packet hmmm hmmm"); 
 			
 			workPacket replyPacket=new workPacket();
-			replyPacket.type=workPacket.jobReply;
 			String hash=packet.hashedPassword;
+			String path=myPath+"/"+hash;
 			
 			if(packet.type==workPacket.jobRequest){
-				 Stat stat = zkc.exists(myPath+"/"+hash, watcher);
+				replyPacket.type=workPacket.jobReply;
+				 Stat stat = zkc.exists(path, watcher);
 	             if (stat != null) {
 	                 replyPacket.type = workPacket.jobReply;
-	                 replyPacket.ReplyMsg="Job Exist";
+	                 replyPacket.ReplyMsg=workPacket.jobExist;
 	                 out.writeObject(replyPacket);
 	             }else{
 	            	 createJob(hash);
-	            	 replyPacket.ReplyMsg="Job in Progress";
+	            	 replyPacket.ReplyMsg=workPacket.jobInProgress;
 	            	 out.writeObject(replyPacket);
 	             }
 				
 			}else if(packet.type==workPacket.jobQuery){
+				Stat stat=zkc.exists(path, watcher);
+				boolean done =false;
+				int doneSegSize=0;
+				if(stat==null){
+					replyPacket.type=workPacket.jobQueryReply;
+					replyPacket.ReplyMsg=workPacket.jobNotExist;
+				}else{
+					//266 is the max number of segments of 1000 words
+					for(int i=0;i<266;i++){
+						stat=zkc.exists(path, watcher);
+						if(stat==null)
+							break;
+						doneSegSize++;
+					}
+					if(doneSegSize==266)
+						done=true;
+					
+					if(done){
+						boolean solved=false;
+						String password="";
+						ArrayList<String> solvedList=new ArrayList<String>();
+						solvedList=zkc.getChilds("/passSolved", watcher);
+						for(int i=0;i<solvedList.size();i++){
+							String[] temp=solvedList.get(i).split("_");
+							if(temp[0].equals(hash)){
+								solved=true;
+								password=temp[1];
+							}
+						}
+						replyPacket.type=workPacket.jobQueryReply;
+						if(solved)
+							replyPacket.ReplyMsg=workPacket.jobFInishedFound+password;
+						else
+							replyPacket.ReplyMsg=workPacket.jobFinishedNotFound;
+						
+					}else{
+						replyPacket.type=workPacket.jobQueryReply;
+						replyPacket.ReplyMsg=workPacket.jobInProgress;
+					}
+				}
+				out.writeObject(replyPacket);
 				
 			}
 			

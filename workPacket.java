@@ -13,7 +13,12 @@ public class workPacket implements Serializable {
 	public static final int dictRequest=500;
 	public static final int dictReply=600;
 	
-	public static final int jobExist=1000;
+	//public static final int jobExist=1000;
+	public static final String jobNotExist="Job Does Not Exist";
+	public static final String jobExist="Job Exist";
+	public static final String jobInProgress="Job In Progress";
+	public static final String jobFinishedNotFound="Job FInished Password Not Found";
+	public static final String jobFInishedFound="Job Finished Password is: ";
 	
 	public String ReplyMsg;
 	public String hashedPassword;
