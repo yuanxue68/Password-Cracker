@@ -126,7 +126,7 @@ class FileServerThread extends Thread {
 	public void run(){
 		try {
 			workPacket packet=(workPacket)in.readObject();
-			System.out.println("getting some of dem packet hmmm hmmm");  
+			System.out.println("requesting index "+packet.index);  
 			if(packet.type==workPacket.dictRequest){
 				
 				workPacket replyPacket=new workPacket();

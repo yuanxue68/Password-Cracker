@@ -79,13 +79,14 @@ public class JobTrackerThread extends Thread{
 					replyPacket.ReplyMsg=workPacket.jobNotExist;
 				}else{
 					//266 is the max number of segments of 1000 words
-					for(int i=0;i<266;i++){
-						stat=zkc.exists(path, watcher);
-						if(stat==null)
-							break;
+					ArrayList<String> list=new ArrayList<String>();
+					list=zkc.getChilds("/jobs", watcher);
+					System.out.println(hash+" list size is "+list.size());
+					for(int i=0;i<list.size();i++){
+						if(list.get(i).split("_")[0].equals(hash))
 						doneSegSize++;
 					}
-					if(doneSegSize==266)
+					if(doneSegSize==1)
 						done=true;
 					
 					if(done){

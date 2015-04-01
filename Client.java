@@ -49,7 +49,7 @@ public class Client {
             System.out.println("Usage: java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. Client zkServer:Port");
             return;
         }
-        
+    	System.out.println("w4ggons hash is "+getHash("w4ggons"));
         String hosts = args[0];
         Client t = new Client(hosts);
         System.out.println("request <password> to create new task");

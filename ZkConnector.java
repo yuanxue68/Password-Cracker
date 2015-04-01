@@ -94,7 +94,9 @@ public class ZkConnector implements Watcher {
     
     public void deleterNode(String path){
     	try {
+    		System.out.println("trying to delete "+path);
 			zooKeeper.delete(path, -1);
+			System.out.println(path+"deleted");
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
