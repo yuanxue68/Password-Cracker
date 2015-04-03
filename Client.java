@@ -19,7 +19,7 @@ import org.apache.zookeeper.Watcher.Event.EventType;
 
 public class Client {
 	
-	static String myPath = "/jobs";
+	static String myPath = "/jobTracker";
     static ZkConnector zkc;
     static Watcher watcher;
     static boolean reconnect=false;
@@ -54,9 +54,9 @@ public class Client {
         Client t = new Client(hosts);
         System.out.println("request <password> to create new task");
         System.out.println("query <password> to query the status of created tasks");
+        workPacket output=new workPacket();
+		workPacket reply=new workPacket();
         while (true){
-        		workPacket output=new workPacket();
-        		workPacket reply=new workPacket();
         	   try{
         		   
         		   	String input; 		   	  		   		
