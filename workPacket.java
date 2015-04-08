@@ -16,7 +16,7 @@ public class workPacket implements Serializable {
 	//public static final int jobExist=1000;
 	public static final String jobNotExist="Failed: Job not found";
 	public static final String jobExist="Job Exist";
-	public static final String jobInProgress="In Progress";
+	public static final String jobInProgress="In progress";
 	public static final String jobFinishedNotFound="Failed: Password not found";
 	public static final String jobFInishedFound="Password found: ";
 	

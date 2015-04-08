@@ -30,10 +30,11 @@ public class ZkConnector implements Watcher {
      * Connects to ZooKeeper servers specified by hosts.
      */
     public synchronized void connect(String hosts) throws IOException, InterruptedException {
-
+      //System.out.println("waiting1");
         zooKeeper = new ZooKeeper(hosts, 5000, this); // watcher - see process method for callbacks
-        System.out.println("waiting");
+        //System.out.println("waiting2");
 	    connectedSignal.await();
+	    //System.out.println("waiting3");
     }
 
     /**

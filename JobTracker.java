@@ -48,10 +48,11 @@ public class JobTracker {
 
 	        try{
 	        	
-	        	zkhost=args[0]+":"+args[1];
+	        	zkhost=args[0];
 	        	host=InetAddress.getLocalHost().getHostName();
 	        	port=4000;
 	        	//System.out.println("connect to zkc");
+            System.out.println(zkhost);
 		        JobTracker t = new JobTracker(zkhost);
 		        //System.out.println("create path");
 		        t.checkpath();

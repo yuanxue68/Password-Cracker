@@ -54,13 +54,13 @@ public class Worker {
 	public static void main(String[] args){
     	
         
-        String zkhost = args[0]+":"+args[1];
+        String zkhost = args[0];
         Worker worker=new Worker(zkhost);
         workPacket output=new workPacket();
         workPacket reply=new workPacket();
         while(true){
         	try{
-        		//System.out.println(args[0]);
+        		//System.out.println(args[0]+"dhjhfjdh");
         		ArrayList<String> jobList=new ArrayList<String>();
         		Stat jobStat=zkc.exists(jobPath,watcher);
         		if(jobStat!=null){
@@ -77,7 +77,8 @@ public class Worker {
                    			
         			jobList=zkc.getChilds(jobPath, watcher);
         			if(jobList.size()==0)
-        				break;
+        			  continue;
+        				//break;
         			Random rn = new Random();
         			int jobListIndex=rn.nextInt()%jobList.size();
         			String joblistPath=jobList.get(jobListIndex);

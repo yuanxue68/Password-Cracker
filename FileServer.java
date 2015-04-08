@@ -34,13 +34,13 @@ public class FileServer {
         try{
         	host=InetAddress.getLocalHost().getHostName();
         	port=4100;
-        	dictPath=args[2];
+        	dictPath=args[1];
 	        BufferedReader br = new BufferedReader(new FileReader(dictPath));
 	        String line;
 	        while ((line = br.readLine()) != null) {
 	        	password.add(line);
 	        }
-	        FileServer t = new FileServer(args[0]+":"+args[1]);
+	        FileServer t = new FileServer(args[0]);
 	        
 	        t.checkpath();
 	        
