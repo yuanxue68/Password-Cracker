@@ -45,29 +45,30 @@ public class JobTracker {
 
 	public static void main(String[] args) {
 	      
-			System.out.println("hello?");
-	        if (args.length != 2) {
-	            System.out.println("Usage: java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. JobTracker zkServer:clientPort");
-	            return;
-	        }
 
 	        try{
 	        	
-	        	zkhost=args[0];
+	        	zkhost=args[0]+":"+args[1];
 	        	host=InetAddress.getLocalHost().getHostName();
-	        	port=Integer.parseInt(args[1]);
+	        	port=4000;
 	        	//System.out.println("connect to zkc");
-		        JobTracker t = new JobTracker(args[0]);
+		        JobTracker t = new JobTracker(zkhost);
 		        //System.out.println("create path");
 		        t.checkpath();
 		        //System.out.println("finished create path");
-		        
-		        ServerSocket serverSocket = new ServerSocket(port);
-	            while (true) {
-	                Socket socket = serverSocket.accept();
-	                System.out.println("got a request on port "+socket.getPort());
-	                new JobTrackerThread(zkhost,socket).start();
-	            }
+		        while(true){
+		        	try{
+			        ServerSocket serverSocket = new ServerSocket(port);
+			        while (true) {
+		                Socket socket = serverSocket.accept();
+		                //System.out.println("got a request on port "+socket.getPort());
+		                new JobTrackerThread(zkhost,socket).start();
+		            }
+		        	}catch(Exception e){
+		        		//System.out.println("port not ava yet");
+		        	}
+		            
+		        }
 	        }
 	        catch(Exception e){
 	        	

@@ -59,16 +59,16 @@ public class Client {
 
         String hosts = args[0];
         Client t = new Client(hosts);
-        System.out.println("request <password> to create new task");
-        System.out.println("query <password> to query the status of created tasks");
+        //System.out.println("request <password> to create new task");
+        //System.out.println("query <password> to query the status of created tasks");
         workPacket output=new workPacket();
 		workPacket reply=new workPacket();
         while (true){
         	   try{
-        		   System.out.println("starting new request please");
+        		   //System.out.println("starting new request please");
         		   	String input; 		   	  		   		
 	               	Stat stat = zkc.exists(myPath, watcher); 
-	               	System.out.println("data length is "+stat.getDataLength());
+	               	//System.out.println("data length is "+stat.getDataLength());
 	               	byte[] nodeInfo=zkc.getData(myPath, stat);
 	               	String conInfo=new String(nodeInfo);
 	               
@@ -84,7 +84,7 @@ public class Client {
 	               	
 	               	if (reconnect==true)
       		   		{
-	               		System.out.println("reconnecting");
+	               		//System.out.println("reconnecting");
       		   			out.writeObject(output);
 	      		   		reply=(workPacket) in.readObject();
 	               		
@@ -95,8 +95,8 @@ public class Client {
       		   			continue;
       		   		}else{
 		               	BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-		               	System.out.println();
-		               	System.out.print("next command: ");
+		               	//System.out.println();
+		               	//System.out.print("next command: ");
 		               	if((input = stdIn.readLine()) != null){
 		               		//System.out.println("input is "+input);
 		               		String[] inputSplit=input.split(" ");
@@ -111,8 +111,8 @@ public class Client {
 		               		}else if(inputSplit[0].toLowerCase().equals("quit")){
 		               			break;
 		               		}else{
-		               			System.out.println("request <password> to create new task");
-		               	        System.out.println("query <password> to query the status of created tasks");
+		               			//System.out.println("request <password> to create new task");
+		               	        //System.out.println("query <password> to query the status of created tasks");
 		               	        continue;
 		               		}
 		               		
@@ -132,7 +132,7 @@ public class Client {
 	                
                }
                catch(Exception e){
-            	   System.out.println("somethinh happened gotta reconnect");
+            	   //System.out.println("somethinh happened gotta reconnect");
             	   reconnect=true;
             	   try {
 					Thread.sleep(1000);

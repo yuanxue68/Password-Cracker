@@ -30,30 +30,42 @@ public class FileServer {
 
     public static void main(String[] args) {
       
-        if (args.length != 2) {
-            System.out.println("Usage: java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. FileServer zkServer:clientPort");
-            return;
-        }
 
         try{
         	host=InetAddress.getLocalHost().getHostName();
-        	port=Integer.parseInt(args[1]);
+        	port=4100;
         	dictPath=args[2];
 	        BufferedReader br = new BufferedReader(new FileReader(dictPath));
 	        String line;
 	        while ((line = br.readLine()) != null) {
 	        	password.add(line);
 	        }
-	        FileServer t = new FileServer(args[0]);
+	        FileServer t = new FileServer(args[0]+":"+args[1]);
 	        
 	        t.checkpath();
 	        
-	        ServerSocket serverSocket = new ServerSocket(port);
+	        
 	        System.out.println("password size is : "+password.size());  
+	       /*
+	        ServerSocket serverSocket = new ServerSocket(port);
             while (true) {
                 Socket socket = serverSocket.accept();
                 new FileServerThread(socket).start();
-            }
+            }*/
+            
+            while(true){
+	        	try{
+		        ServerSocket serverSocket = new ServerSocket(port);
+		        while (true) {
+	                Socket socket = serverSocket.accept();
+	                //System.out.println("got a request on port "+socket.getPort());
+	                new FileServerThread(socket).start();
+	            }
+	        	}catch(Exception e){
+	        		//System.out.println("port not ava yet");
+	        	}
+	            
+	        }
         }
         catch(Exception e){
         	

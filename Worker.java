@@ -52,17 +52,15 @@ public class Worker {
 	}
 
 	public static void main(String[] args){
-    	if (args.length != 1) {
-            System.out.println("Usage: java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. Worker zkServer:Port");
-            return;
-        }
+    	
         
-        String zkhost = args[0];
+        String zkhost = args[0]+":"+args[1];
         Worker worker=new Worker(zkhost);
         workPacket output=new workPacket();
         workPacket reply=new workPacket();
         while(true){
         	try{
+        		//System.out.println(args[0]);
         		ArrayList<String> jobList=new ArrayList<String>();
         		Stat jobStat=zkc.exists(jobPath,watcher);
         		if(jobStat!=null){
