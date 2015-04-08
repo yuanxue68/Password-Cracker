@@ -33,8 +33,11 @@ public class Worker {
     
     public Worker(String hosts) {
 		zkc = new ZkConnector();
+		
         try {
+        	System.out.println("connect to zk");
             zkc.connect(hosts);
+            System.out.println("connected to zk");
             System.out.println("JobTracker: zk connect in job tracker parent on host "+hosts);
         } catch(Exception e) {
             System.out.println("JobTracker: Zookeeper connect "+ e.getMessage());
@@ -105,7 +108,11 @@ public class Worker {
         				System.out.println("alry exist"+workDone+"/"+hash+"_"+nodeNameSplit[1]);
         			}
         			System.out.println("deleted?");
-        			zkc.deleterNode(jobPath+"/"+hash+"_"+nodeNameSplit[1]);
+        			try{
+        				zkc.deleterNode(jobPath+"/"+hash+"_"+nodeNameSplit[1]);
+        			}catch(Exception e){
+        				
+        			}
         			in.close();
 	                out.close();
 	                socket.close();

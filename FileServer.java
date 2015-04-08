@@ -25,6 +25,7 @@ public class FileServer {
     Watcher watcher;
     static String host;
     static int port;
+    static String dictPath;
     public static ArrayList<String> password=new ArrayList<String>();
 
     public static void main(String[] args) {
@@ -37,7 +38,8 @@ public class FileServer {
         try{
         	host=InetAddress.getLocalHost().getHostName();
         	port=Integer.parseInt(args[1]);
-	        BufferedReader br = new BufferedReader(new FileReader("dictionary/lowercase.rand"));
+        	dictPath=args[2];
+	        BufferedReader br = new BufferedReader(new FileReader(dictPath));
 	        String line;
 	        while ((line = br.readLine()) != null) {
 	        	password.add(line);

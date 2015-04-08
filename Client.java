@@ -29,13 +29,14 @@ public class Client {
     static ObjectInputStream in = null;
     
     Client(String hosts){
+    	 System.out.println("Zookeeper connecting ");
     	 zkc = new ZkConnector();
 	        try {
 	            zkc.connect(hosts);
 	        } catch(Exception e) {
 	            System.out.println("Zookeeper connect "+ e.getMessage());
 	        }
-	 
+	        System.out.println("Zookeeper connected "); 
 	        watcher = new Watcher() { // Anonymous Watcher
 	                            @Override
 	                            public void process(WatchedEvent event) {
@@ -49,7 +50,13 @@ public class Client {
             System.out.println("Usage: java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. Client zkServer:Port");
             return;
         }
+
     	System.out.println("w4ggons hash is "+getHash("w4ggons"));
+    	System.out.println("borat3s hash is "+getHash("borat3s"));
+    	System.out.println("unpr0fessi0nal hash is "+getHash("unpr0fessi0nal"));
+    	System.out.println("hangdog hash is "+getHash("hangdog"));
+    	System.out.println("instated hash is "+getHash("instated"));
+
         String hosts = args[0];
         Client t = new Client(hosts);
         System.out.println("request <password> to create new task");
@@ -58,10 +65,10 @@ public class Client {
 		workPacket reply=new workPacket();
         while (true){
         	   try{
-        		   
+        		   System.out.println("starting new request please");
         		   	String input; 		   	  		   		
 	               	Stat stat = zkc.exists(myPath, watcher); 
-	               	//System.out.println("data length is "+stat.getDataLength());
+	               	System.out.println("data length is "+stat.getDataLength());
 	               	byte[] nodeInfo=zkc.getData(myPath, stat);
 	               	String conInfo=new String(nodeInfo);
 	               
@@ -88,16 +95,21 @@ public class Client {
       		   			continue;
       		   		}else{
 		               	BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+		               	System.out.println();
 		               	System.out.print("next command: ");
 		               	if((input = stdIn.readLine()) != null){
+		               		//System.out.println("input is "+input);
 		               		String[] inputSplit=input.split(" ");
 		               		
 		               		if(inputSplit[0].toLowerCase().equals("request")){
 		               			output.type=workPacket.jobRequest;
 		               			output.hashedPassword=inputSplit[1];	
 		               		}else if(inputSplit[0].toLowerCase().equals("query")){
+		               			//System.out.println("query is "+inputSplit[1]);
 		               			output.type=workPacket.jobQuery;
 		               			output.hashedPassword=inputSplit[1];
+		               		}else if(inputSplit[0].toLowerCase().equals("quit")){
+		               			break;
 		               		}else{
 		               			System.out.println("request <password> to create new task");
 		               	        System.out.println("query <password> to query the status of created tasks");
@@ -110,12 +122,14 @@ public class Client {
 		               		if(reply.type==workPacket.jobQueryReply||reply.type==workPacket.jobReply){
 		               			System.out.println(reply.ReplyMsg);
 		               		}
+		               	
 		               	}
 	               	}
-	               		
+	               	//System.out.println("next request please");
 	               	in.close();
 	                out.close();
 	                socket.close();
+	                
                }
                catch(Exception e){
             	   System.out.println("somethinh happened gotta reconnect");
@@ -130,6 +144,12 @@ public class Client {
                }
         	
         }
+        try {
+			zkc.close();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
      
         
     }

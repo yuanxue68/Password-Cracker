@@ -27,8 +27,9 @@ public class JobTrackerThread extends Thread{
 	public JobTrackerThread(String trackerHost,Socket _socket) {
 		super();
 		try{
-			//System.out.println("creating new job thread on host "+trackerHost);
+			System.out.println("creating new job thread on host "+trackerHost);
 			zkc.connect(trackerHost);
+			System.out.println("zk connected");
 			this.socket=_socket;
 			//System.out.println("start to createstream in job tracker thread");
 			this.in=new ObjectInputStream (_socket.getInputStream());
@@ -115,10 +116,15 @@ public class JobTrackerThread extends Thread{
 				out.writeObject(replyPacket);
 				
 			}
+			in.close();
+            out.close();
+            socket.close();
+            zkc.close();
 			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		
 		
 	}
 	
@@ -128,25 +134,26 @@ public class JobTrackerThread extends Thread{
 		String path=myPath;
 		Stat stat = zkc.exists(path, watcher);
         if (stat == null) {              // znode doesn't exist; let's try creating it
-            System.out.println("Creating " + myPath);
+            //System.out.println("Creating " + myPath);
             Code ret = zkc.create(
                         path,         // Path of znode
                         null,           // Data not needed.
                         CreateMode.PERSISTENT   // Znode type, set to EPHEMERAL.
                         );
-            if (ret == Code.OK) System.out.println(myPath+"created");
+            //if (ret == Code.OK)
+            	//System.out.println(myPath+"created");
         } 
         //create a node to track finished segments of the hash
         path="/done/"+hash;
         Stat stat2 = zkc.exists(path, watcher);
         if (stat2 == null) {              // znode doesn't exist; let's try creating it
-            System.out.println("Creating " + path);
+            //System.out.println("Creating " + path);
             Code ret = zkc.create(
                         path,         // Path of znode
                         null,           // Data not needed.
                         CreateMode.PERSISTENT   // Znode type, set to EPHEMERAL.
                         );
-            if (ret == Code.OK) System.out.println("/workDone/"+hash+"created");
+            //if (ret == Code.OK) System.out.println("/workDone/"+hash+"created");
         } 
        
         
@@ -162,7 +169,7 @@ public class JobTrackerThread extends Thread{
 	                    null,           // Data not needed.
 	                    CreateMode.PERSISTENT   // Znode type, set to EPHEMERAL.
 	                    );
-	        	if (ret == Code.OK) System.out.println(path+" created");
+	        	//if (ret == Code.OK) System.out.println(path+" created");
         	}
         	stat4=null;
         	
@@ -171,13 +178,13 @@ public class JobTrackerThread extends Thread{
         path=myPath+"/"+hash;
         Stat stat3=zkc.exists(path, watcher);
         if(stat3==null){
-        	System.out.println("Creating " + path);
+        	//System.out.println("Creating " + path);
             Code ret = zkc.create(
             			path,         // Path of znode
                         null,           // Data not needed.
                         CreateMode.PERSISTENT   // Znode type, set to EPHEMERAL.
                         );
-            if (ret == Code.OK) System.out.println(path+" created");
+            //if (ret == Code.OK) System.out.println(path+" created");
         	
         }
         
