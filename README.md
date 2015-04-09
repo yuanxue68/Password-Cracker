@@ -8,15 +8,15 @@ a password cracker with Apache Zookeeper
 4) Finally, run the client.
 5) Client will return "In progress" once the hash is successfully submitted.
 
-runJobTracker:
-	java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. JobTracker localhost:8855
+runJobTracker:  
+	java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. JobTracker localhost:8855  
 
-runFileServer:
-	java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. FileServer localhost:8855 ./dictionary/lowercase.rand
+runFileServer:  
+	java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. FileServer localhost:8855 ./dictionary/lowercase.rand  
 
-runWorker:
-	java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. Worker localhost:8855
+runWorker:  
+	java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. Worker localhost:8855  
 		
-runClient:
-	To submit job: java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. ClientDriver localhost:8855 job <hash>
-	To query job: java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. ClientDriver localhost:8855 status <hash>
+runClient:  
+	To submit job: java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. ClientDriver localhost:8855 job <hash>  
+	To query job: java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. ClientDriver localhost:8855 status <hash>  
