@@ -12,11 +12,11 @@ a password cracker with Apache Zookeeper
 	java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. JobTracker localhost:8855  
 
 **runFileServer:**  
-	java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. FileServer localhost:8855 ./dictionary/lowercase.rand  
+	java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. FileServer localhost:8855 **./dictionary/lowercase.rand**  
 
 **runWorker:**  
 	java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. Worker localhost:8855  
 		
 **runClient:**  
-	**To submit job:** java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. ClientDriver localhost:8855 job <hash>  
-	**To query job:** java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. ClientDriver localhost:8855 status <hash>  
+	**To submit job:** java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. ClientDriver localhost:8855 job **hash**  
+	**To query job:** java -classpath lib/zookeeper-3.3.2.jar:lib/log4j-1.2.15.jar:. ClientDriver localhost:8855 status **hash**  
