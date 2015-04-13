@@ -1,6 +1,8 @@
 # Password-Cracker
 a password cracker with Apache Zookeeper
 
+Code need some clean up on all demmm sys out
+
 # How to Run:
 1) Replace "8855" with your own port that Zookeeper is running on.  
 2) Reference your own jar path and dictionary file.  
